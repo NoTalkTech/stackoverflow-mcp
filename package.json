@@ -1,5 +1,5 @@
 {
-  "name": "@notalk/stackoverflow-mcp",
+  "name": "@notalk-tech/stackoverflow-mcp",
   "version": "0.1.0",
   "description": "StackOverflow MCP server for querying programming Q&A using FastMCP - npx wrapper for Python package",
   "main": "cli.js",
