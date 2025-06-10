@@ -101,30 +101,7 @@ class StackOverflowMCPCLI {
     async installPackage(pythonCmd) {
         this.log(`Installing ${this.packageName} Python package...`);
         
-        // Try pip install first
-        try {
-            const result = await this.runCommand(pythonCmd, ['-m', 'pip', 'install', this.packageName]);
-            if (result.code === 0) {
-                console.log(`✅ Successfully installed ${this.packageName}`);
-                return true;
-            }
-        } catch (error) {
-            this.log(`pip install failed: ${error.message}`);
-        }
-
-        // Try with user flag if global install failed
-        try {
-            this.log('Trying user installation...');
-            const result = await this.runCommand(pythonCmd, ['-m', 'pip', 'install', '--user', this.packageName]);
-            if (result.code === 0) {
-                console.log(`✅ Successfully installed ${this.packageName} (user installation)`);
-                return true;
-            }
-        } catch (error) {
-            this.log(`User pip install failed: ${error.message}`);
-        }
-
-        // If we're in a development environment, try local installation
+        // If we're in a development environment, try local installation first
         if (existsSync('pyproject.toml') || existsSync('setup.py')) {
             try {
                 this.log('Found development environment, installing locally...');
@@ -136,6 +113,55 @@ class StackOverflowMCPCLI {
             } catch (error) {
                 this.log(`Local install failed: ${error.message}`);
             }
+        }
+
+        // Try uv first (modern Python package manager)
+        try {
+            this.log('Trying uv installation...');
+            const result = await this.runCommand('uv', ['pip', 'install', this.packageName], { stdio: 'pipe' });
+            if (result.code === 0) {
+                console.log(`✅ Successfully installed ${this.packageName} (uv)`);
+                return true;
+            }
+        } catch (error) {
+            this.log(`uv not found or failed: ${error.message}`);
+        }
+
+        // Try pipx (isolated Python apps)
+        try {
+            this.log('Trying pipx installation...');
+            const result = await this.runCommand('pipx', ['install', this.packageName], { stdio: 'pipe' });
+            if (result.code === 0) {
+                console.log(`✅ Successfully installed ${this.packageName} (pipx)`);
+                return true;
+            }
+        } catch (error) {
+            this.log(`pipx not found or failed: ${error.message}`);
+        }
+
+        // Try pip with user flag (safer for externally managed environments)
+        try {
+            this.log('Trying pip user installation...');
+            const result = await this.runCommand(pythonCmd, ['-m', 'pip', 'install', '--user', this.packageName]);
+            if (result.code === 0) {
+                console.log(`✅ Successfully installed ${this.packageName} (pip --user)`);
+                return true;
+            }
+        } catch (error) {
+            this.log(`pip --user failed: ${error.message}`);
+        }
+
+        // Last resort: try pip with break system packages flag
+        try {
+            this.log('Trying pip with --break-system-packages (last resort)...');
+            const result = await this.runCommand(pythonCmd, ['-m', 'pip', 'install', '--break-system-packages', this.packageName]);
+            if (result.code === 0) {
+                console.log(`⚠️  Successfully installed ${this.packageName} (--break-system-packages)`);
+                console.log('⚠️  Warning: System packages flag used - consider using uv or pipx instead');
+                return true;
+            }
+        } catch (error) {
+            this.log(`--break-system-packages failed: ${error.message}`);
         }
 
         return false;
@@ -221,10 +247,19 @@ class StackOverflowMCPCLI {
                 
                 if (!installSuccess) {
                     this.error('Failed to install the Python package');
-                    this.error('Please try:');
-                    this.error(`  pip install ${this.packageName}`);
-                    this.error('or');
+                    this.error('Please try one of these methods:');
+                    this.error('');
+                    this.error('Recommended (pipx):');
+                    this.error('  brew install pipx');
+                    this.error(`  pipx install ${this.packageName}`);
+                    this.error('');
+                    this.error('Alternative (uv):');
+                    this.error('  brew install uv');
+                    this.error(`  uv pip install ${this.packageName}`);
+                    this.error('');
+                    this.error('Fallback (pip):');
                     this.error(`  pip install --user ${this.packageName}`);
+                    this.error('');
                     process.exit(1);
                 }
             } else {
@@ -252,7 +287,9 @@ class StackOverflowMCPCLI {
             console.log('');
             console.log('💡 Troubleshooting:');
             console.log('  1. Ensure Python 3.12+ is installed and in PATH');
-            console.log('  2. Ensure pip is available and working');
+            console.log('  2. Install a Python package manager:');
+            console.log('     brew install pipx   (recommended)');
+            console.log('     brew install uv     (alternative)');
             console.log('  3. Check network connectivity for package installation');
             console.log('  4. Try running with --verbose for more details');
             console.log('');
