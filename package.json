@@ -1,6 +1,6 @@
 {
   "name": "@notalk-tech/stackoverflow-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "StackOverflow MCP server for querying programming Q&A using FastMCP - npx wrapper for Python package",
   "main": "cli.js",
   "bin": {
@@ -28,7 +28,7 @@
   },
   "keywords": [
     "stackoverflow",
-    "mcp", 
+    "mcp",
     "model-context-protocol",
     "api",
     "programming",
@@ -76,4 +76,4 @@
     "type": "github",
     "url": "https://github.com/sponsors/NoTalkTech"
   }
-} 
+}
