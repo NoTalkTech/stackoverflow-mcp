@@ -152,7 +152,7 @@ To use this MCP server with higher rate limits, you'll need a StackOverflow API 
 #### Quick Steps
 
 1. **Register Your Application**
-   - Visit https://stackapps.com/apps/oauth/register (or https://stackapps.com/applications/register)
+   - Visit https://stackapps.com/applications/register
    - Log in with your Stack Exchange account
    - Fill in basic information:
      - Application Name (e.g., "My MCP Server")
