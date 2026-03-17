@@ -145,6 +145,38 @@ uv run python -m stackoverflow_mcp --api-key your_stackoverflow_api_key
 - 🛡️ **Built-in Error Handling**: Consistent error responses
 - 📦 **Better Separation**: Clean architecture with focused responsibilities
 
+### Getting Your API Key
+
+To use this MCP server with higher rate limits, you'll need a StackOverflow API key:
+
+#### Quick Steps
+
+1. **Register Your Application**
+   - Visit https://stackapps.com/apps/oauth/register
+   - Fill in basic information:
+     - Application Name (e.g., "My MCP Server")
+     - Description (brief description of your use case)
+     - OAuth Domain (can use `localhost` for local development)
+     - Application Website (optional)
+
+2. **Get Your API Key**
+   - After registration, you'll receive a **Key** (this is your API key)
+   - Copy this key for use in your configuration
+
+3. **Configure the Server**
+   - Add the key to your configuration file (see Configuration section below)
+   - Or pass it via command line: `--api-key your_key_here`
+
+#### Rate Limits
+
+- **Without API key**: 300 requests/day per IP
+- **With API key**: 10,000 requests/day
+- **With OAuth**: 10,000 requests/day + write access (not needed for read-only queries)
+
+For read-only operations (searching and retrieving questions/answers), a simple API key is sufficient. You don't need OAuth authentication unless you want to post questions, answers, or perform write operations.
+
+**Learn more**: https://api.stackexchange.com/docs/authentication
+
 ### Configuration
 
 Create a `.stackoverflow-mcp.json` file in your project directory:
@@ -311,7 +343,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - [Model Context Protocol](https://github.com/modelcontextprotocol) for the MCP specification
-- [StackOverflow](https://stackoverflow.com/) for providing the API
+- [StackOverflow](https://stackapps.com/applications/register) for providing the API
 - The open-source community for inspiration and contributions
 
 ---
