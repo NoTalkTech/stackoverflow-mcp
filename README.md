@@ -153,15 +153,19 @@ To use this MCP server with higher rate limits, you'll need a StackOverflow API 
 
 1. **Register Your Application**
    - Visit https://stackapps.com/apps/oauth/register
+   - Log in with your Stack Exchange account
    - Fill in basic information:
      - Application Name (e.g., "My MCP Server")
      - Description (brief description of your use case)
      - OAuth Domain (can use `localhost` for local development)
      - Application Website (optional)
+   - Submit the registration
 
-2. **Get Your API Key**
-   - After registration, you'll receive a **Key** (this is your API key)
-   - Copy this key for use in your configuration
+2. **Generate Your API Key**
+   - After registration, go to your application management page
+   - Click **"Generate a new API key"** button
+   - Copy the generated key (this is your API key)
+   - Keep this key secure and don't share it publicly
 
 3. **Configure the Server**
    - Add the key to your configuration file (see Configuration section below)
