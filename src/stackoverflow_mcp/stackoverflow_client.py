@@ -1191,6 +1191,7 @@ class StackOverflowClient:
         page_size: int = 10,
         sort: str = "relevance",
         order: str = "desc",
+        site: str = "stackoverflow",
         priority: RequestPriority = RequestPriority.NORMAL
     ) -> Dict[str, Any]:
         """
@@ -1202,6 +1203,7 @@ class StackOverflowClient:
             page_size: Number of results per page (max 100)
             sort: Sort order (relevance, activity, votes, creation)
             order: Sort direction (desc, asc)
+            site: Site name to search in (default: stackoverflow)
             priority: Request priority for queue management
             
         Returns:
@@ -1222,9 +1224,10 @@ class StackOverflowClient:
         if order not in valid_orders:
             order = "desc"
         
-        # Use search/advanced endpoint with intitle parameter for keyword search
+        # Use search/advanced endpoint with q parameter for keyword search
         params = {
-            "intitle": query.strip(),  # Search in question titles
+            "q": query.strip(),  # Search query using q parameter
+            "site": site.strip(),  # Search on specific site
             "page": page,
             "pagesize": page_size,
             "sort": sort,
@@ -1255,6 +1258,7 @@ class StackOverflowClient:
         page_size: int = 10,
         sort: str = "activity",
         order: str = "desc",
+        site: str = "stackoverflow",
         priority: RequestPriority = RequestPriority.NORMAL
     ) -> Dict[str, Any]:
         """
@@ -1266,6 +1270,7 @@ class StackOverflowClient:
             page_size: Number of results per page (max 100)
             sort: Sort order (activity, votes, creation, relevance)
             order: Sort direction (desc, asc)
+            site: Site name to search in (default: stackoverflow)
             priority: Request priority for queue management
             
         Returns:
@@ -1294,6 +1299,7 @@ class StackOverflowClient:
         
         params = {
             "tagged": tagged,
+            "site": site.strip(),  # Search on specific site
             "page": page,
             "pagesize": page_size,
             "sort": sort,
