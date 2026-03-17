@@ -48,7 +48,8 @@ async def search_questions(
     query: str,
     limit: int = 10,
     page: int = 1,
-    sort: str = "relevance"
+    sort: str = "relevance",
+    site: str = "stackoverflow"
 ) -> Dict[str, Any]:
     """
     Search StackOverflow questions by keywords.
@@ -58,6 +59,7 @@ async def search_questions(
         limit: Maximum number of results (1-50)
         page: Page number for pagination (minimum 1)
         sort: Sort order (relevance, activity, votes, creation)
+        site: Site name to search in (e.g., stackoverflow, serverfault, askubuntu)
     """
     await server.initialize()
     
@@ -67,6 +69,7 @@ async def search_questions(
             page=page,
             page_size=min(max(1, limit), 50),
             sort=sort,
+            site=site,
             priority=RequestPriority.NORMAL
         )
         
@@ -88,7 +91,8 @@ async def search_by_tags(
     tags: List[str],
     limit: int = 10,
     page: int = 1,
-    sort: str = "activity"
+    sort: str = "activity",
+    site: str = "stackoverflow"
 ) -> Dict[str, Any]:
     """
     Search StackOverflow questions by programming tags.
@@ -98,6 +102,7 @@ async def search_by_tags(
         limit: Maximum number of results (1-50)
         page: Page number for pagination (minimum 1)
         sort: Sort order (activity, votes, creation, relevance)
+        site: Site name to search in (e.g., stackoverflow, serverfault, askubuntu)
     """
     await server.initialize()
     
@@ -107,6 +112,7 @@ async def search_by_tags(
             page=page,
             page_size=min(max(1, limit), 50),
             sort=sort,
+            site=site,
             priority=RequestPriority.NORMAL
         )
         
